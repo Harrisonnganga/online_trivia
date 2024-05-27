@@ -1,0 +1,21 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-size: 16px;
+    background-color: #f8f9fd;
+  }
+
+  .main-section {
+    padding: 0;
+  }
+  .box {
+    width: 100%;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 10px 34px -15px rgb(0 0 0 / 24%);
+  }
