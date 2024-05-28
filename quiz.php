@@ -1,3 +1,12 @@
+<?php
+require_once "connect.php";
+require_once "function.php";
+session_start();
+if (!isset($_SESSION['login_active'])) {
+  header("Location: index.php");
+  exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,6 +36,31 @@
       </div>
     </nav>
     <form action="checkanswers.php" method="post">
+      <?php for ($i = 1; $i <= totalquestion($conn); $i++) :
+        $sql = "SELECT * FROM questions where qid = $i";
+        $result = mysqli_query($conn, $sql);
+      ?>
+        <div class="container">
+          <div class="row justify-content-center">
+            <?php while ($row = mysqli_fetch_assoc($result)) :
+              $sql = "SELECT * FROM answers where ans_id = $i";
+              $result = mysqli_query($conn, $sql);
+            ?>
+              <div class="col-md-8">
+                <div class="card my-2 p-3">
+                  <div class="card-body">
+                    <h5 class="card-title py-2">Q.<?php echo $row['qid'] . " " . $row["question"];; ?> </h5>
+                    <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                      <div class="form-check">
+                        <input type="radio" class="form-check-input" name="checkanswer[<?php echo $row['ans_id']; ?>]" value="<?php echo $row['aid']; ?>">
+                        <?php echo $row['answer']; ?>
+                      </div>
+                    <?php endwhile ?>
+                  </div>
+                </div>
+              </div>
+            <?php endwhile ?>
+          <?php endfor ?>
             <div class="col-md-8 mb-5">
               <button type="submit" class="btn btn-success" name="answer-submit">Submit Answers</button>
             </div>
