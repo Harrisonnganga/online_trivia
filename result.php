@@ -1,6 +1,6 @@
 <?php
-require_once("connect.php");
-require_once("function.php");
+require_once "Database.php";
+require_once "function.php";
 session_start();
 if (!isset($_SESSION['login_active'])) {
   header("Location: index.php");
@@ -13,7 +13,6 @@ if (!isset($_SESSION['login_active'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <section class="main-section">
@@ -42,14 +41,17 @@ if (!isset($_SESSION['login_active'])) {
             <div class="card my-2 p-3 text-center">
               <div class="card-body">
                 <h5 class="card-title py-2 text-center">No Question Attempted</h5>
-                <button class="btn btn-warning">You Score is : <?php echo $_SESSION['score']; ?></button>
+                <button class="btn btn-warning">Your Score is: <?php echo $_SESSION['score']; ?></button>
               </div>
             </div>
           <?php else : ?>
             <div class="card my-2 p-3 text-center">
               <div class="card-body">
                 <h5 class="card-title py-2 text-center">You have attempted <?php echo $_SESSION['attempted']; ?> out of <?php echo totalquestion($conn); ?></h5>
-                <button class="btn btn-warning">You Score: <?php echo $_SESSION['score']; ?></button><span class="badge text-bg-primary">Answered <?php echo $_SESSION['score']; ?> Questions Successfully!</span>
+                <button class="btn btn-warning">Your Score: <?php echo $_SESSION['score']; ?></button>
+                <div style="margin-top: 10px; font-weight: bold;">
+                  <span class="badge text-bg-primary">Answered <?php echo $_SESSION['score']; ?> Questions Correctly!</span>
+                </div>
               </div>
             </div>
           <?php endif ?>
@@ -61,7 +63,6 @@ if (!isset($_SESSION['login_active'])) {
         </div>
       </div>
     </div>
-    </form>
   </section>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

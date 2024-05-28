@@ -1,3 +1,11 @@
+<?php
+require_once "Database.php";
+session_start();
+if (!isset($_SESSION['login_active'])) {
+  header("Location: index.php");
+  exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,9 +28,9 @@
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" href="#">Link</a>
-            </li>
+            </li> -->
           </ul>
           <div class="d-flex">
             <a class="btn btn-danger" href="logout.php">Logout</a>

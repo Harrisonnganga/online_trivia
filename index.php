@@ -37,6 +37,8 @@ if (isset($_SESSION['login_active'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Online Trivia</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -81,7 +83,8 @@ if (isset($_SESSION['login_active'])) {
                                 </div>
                             </form>
                             <div class="py-4 text-center">
-                                Join now, <a href="signup.php" class="link">Sign Up</a>
+                                You new <br>
+                                <a href="signup.php" class="link">Sign Up</a>
                             </div>
                         </div>
                     </div>

@@ -1,3 +1,26 @@
+<?php
+require_once "Database.php";
+require_once "function.php";
+session_start();
+if (isset($_POST['signup'])) {
+  $name = santize($_POST['name']);
+  $email = santize($_POST['email']);
+  $inputpassword = santize($_POST['password']);
+  $password = md5($inputpassword);
+  $sql = "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password');";
+  if (mysqli_query($conn, $sql)) {
+    $_SESSION['msg'] = "You have Signed Up Successfully";
+    $_SESSION['class'] = "text-bg-success";
+    header("Location: index.php");
+    exit();
+  } else {
+    $_SESSION['msg'] = "Sign Up failed";
+    $_SESSION['class'] = "text-bg-danger";
+    header("Location: index.php");
+    exit();
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,6 +29,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Online Trivia</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -33,7 +58,7 @@
                                     </div>
                                 </form>
                                 <div class="py-4 text-center">
-                                    <a href="login.html" class="link">Login</a>
+                                    <a href="login.php" class="link">Login</a>
                                 </div>
                             </div>
                         </div>
