@@ -1,36 +1,29 @@
 <?php
-require_once("Database.php");
 session_start();
+require_once "Database.php";
+require_once "function.php";
+
+if (!isset($_SESSION['login_active'])) {
+  header("Location: index.php");
+  exit();
+}
+
+// Establish database connection
+$database = new Database();
+$conn = $database->getConnection();
 
 if (isset($_POST['answer-submit'])) {
-
-  if (!empty($_POST['checkanswer'])) {
-
-    $correctAnswers = 4;
-    $selected = $_POST['checkanswer'];
-
-    $sql = "SELECT * FROM questions";
-    $result = mysqli_query($conn, $sql);
-
-    $i = 1;
-    while ($row = mysqli_fetch_assoc($result)) {
-      if ($row['ans_id'] == $selected[$i]) {
-        $correctAnswers++;
-      }
-      $i++;
+  $score = 0;
+  $total_questions = totalquestion($conn);
+  foreach ($_POST['checkanswer'] as $question_id => $selected_answer) {
+    $query = "SELECT * FROM answers WHERE ans_id = '$question_id' AND aid = '$selected_answer' AND is_correct = 1";
+    $result = mysqli_query($conn, $query);
+    if (mysqli_num_rows($result) > 0) {
+      $score += 4; // Increase score by 4 for each correct answer
     }
-
-    $_SESSION['attempted'] = count($_POST['checkanswer']);
-    $_SESSION['score'] = $correctAnswers;
-
-
-    header("Location: result.php");
-    exit();
-
-  } else {
-    $_SESSION['attempted'] = 0;
-    $_SESSION['score'] = 0;
-    header("Location: result.php");
-    exit();
   }
+  $_SESSION['score'] = $score;
+  header("Location: result.php");
+  exit();
 }
+?>

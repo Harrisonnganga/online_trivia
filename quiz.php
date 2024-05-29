@@ -1,9 +1,42 @@
 <?php
+session_start();
 require_once "Database.php";
 require_once "function.php";
-session_start();
+
 if (!isset($_SESSION['login_active'])) {
   header("Location: index.php");
+  exit();
+}
+
+// Establish database connection
+$database = new Database();
+$conn = $database->getConnection();
+
+$current_question = isset($_SESSION['current_question']) ? $_SESSION['current_question'] : 1;
+$total_questions = totalquestion($conn);
+
+if ($current_question > $total_questions) {
+  header("Location: result.php");
+  exit();
+}
+
+$query = "SELECT * FROM questions WHERE qid = '$current_question'";
+$result = mysqli_query($conn, $query);
+$question = mysqli_fetch_assoc($result);
+
+$query = "SELECT * FROM answers WHERE ans_id = '$current_question'";
+$result = mysqli_query($conn, $query);
+$answers = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $selected_answer = $_POST['answer'];
+  $query = "SELECT * FROM answers WHERE ans_id = '$current_question' AND aid = '$selected_answer' AND is_correct = 1";
+  $result = mysqli_query($conn, $query);
+  if (mysqli_num_rows($result) > 0) {
+    $_SESSION['score'] += 4; // Increase score by 4 for each correct answer
+  }
+  $_SESSION['current_question']++;
+  header("Location: quiz.php");
   exit();
 }
 ?>
@@ -12,10 +45,9 @@ if (!isset($_SESSION['login_active'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Trivia</title>
+    <title>Quiz</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
 </head>
 <body>
 <section class="main-section">
@@ -37,40 +69,29 @@ if (!isset($_SESSION['login_active'])) {
         </div>
       </div>
     </nav>
-    <form action="checkanswers.php" method="post">
-      <?php for ($i = 1; $i <= totalquestion($conn); $i++) :
-        $sql = "SELECT * FROM questions where qid = $i";
-        $result = mysqli_query($conn, $sql);
-      ?>
-        <div class="container">
-          <div class="row justify-content-center">
-            <?php while ($row = mysqli_fetch_assoc($result)) :
-              $sql = "SELECT * FROM answers where ans_id = $i";
-              $result = mysqli_query($conn, $sql);
-            ?>
-              <div class="col-md-8">
-                <div class="card my-2 p-3">
-                  <div class="card-body">
-                    <h5 class="card-title py-2">Q.<?php echo $row['qid'] . " " . $row["question"];; ?> </h5>
-                    <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                      <div class="form-check">
-                        <input type="radio" class="form-check-input" name="checkanswer[<?php echo $row['ans_id']; ?>]" value="<?php echo $row['aid']; ?>">
-                        <?php echo $row['answer']; ?>
-                      </div>
-                    <?php endwhile ?>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card my-2 p-3">
+            <div class="card-body">
+              <h5 class="card-title py-2">Q.<?php echo $question['qid'] . " " . $question['question']; ?></h5>
+              <form method="POST" action="">
+                <?php foreach ($answers as $answer) : ?>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" value="<?php echo $answer['aid']; ?>" required>
+                    <label class="form-check-label">
+                      <?php echo $answer['answer']; ?>
+                    </label>
                   </div>
-                </div>
-              </div>
-            <?php endwhile ?>
-          <?php endfor ?>
-            <div class="col-md-8 mb-5">
-              <button type="submit" class="btn btn-success" name="answer-submit">Submit Answers</button>
+                <?php endforeach; ?>
+                <button type="submit" class="btn btn-primary mt-3">Next</button>
+              </form>
             </div>
           </div>
         </div>
-    </form>
+      </div>
+    </div>
   </section>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

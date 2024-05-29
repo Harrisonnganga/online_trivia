@@ -1,17 +1,41 @@
 <?php
+session_start();
 require_once "Database.php";
 require_once "function.php";
-session_start();
+
 if (!isset($_SESSION['login_active'])) {
   header("Location: index.php");
   exit();
 }
+
+if (!isset($_SESSION['user_id'])) {
+  die("User ID not set in session.");
+}
+
+if (!isset($_SESSION['score'])) {
+  die("Score not set in session.");
+}
+
+// Establish database connection
+$database = new Database();
+$conn = $database->getConnection();
+
+$user_id = $_SESSION['user_id'];
+$score = $_SESSION['score'];
+
+$query = "INSERT INTO scores (user_id, score) VALUES ('$user_id', '$score')";
+mysqli_query($conn, $query);
+
+unset($_SESSION['current_question']);
+unset($_SESSION['score']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -37,27 +61,12 @@ if (!isset($_SESSION['login_active'])) {
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-8">
-          <?php if ($_SESSION['score'] == 0) : ?>
-            <div class="card my-2 p-3 text-center">
-              <div class="card-body">
-                <h5 class="card-title py-2 text-center">No Question Attempted</h5>
-                <button class="btn btn-warning">Your Score is: <?php echo $_SESSION['score']; ?></button>
-              </div>
-            </div>
-          <?php else : ?>
-            <div class="card my-2 p-3 text-center">
-              <div class="card-body">
-                <h5 class="card-title py-2 text-center">You have attempted <?php echo $_SESSION['attempted']; ?> out of <?php echo totalquestion($conn); ?></h5>
-                <button class="btn btn-warning">Your Score: <?php echo $_SESSION['score']; ?></button>
-                <div style="margin-top: 10px; font-weight: bold;">
-                  <span class="badge text-bg-primary">Answered <?php echo $_SESSION['score']; ?> Questions Correctly!</span>
-                </div>
-              </div>
-            </div>
-          <?php endif ?>
           <div class="card my-2 p-3 text-center">
             <div class="card-body">
-              <a class="btn btn-info" href="quiz.php">Reattempt Quiz</a>
+              <h5 class="card-title py-2">Quiz Completed</h5>
+              <p class="card-text">You answered <span id="correct-answers"><?php echo $score / 4; ?></span> questions correctly!</p>
+              <p class="card-text">Your Score: <span id="score"><?php echo $score; ?></span>%</p>
+              <a href="dashboard.php" class="btn btn-info">Go to Dashboard</a>
             </div>
           </div>
         </div>
