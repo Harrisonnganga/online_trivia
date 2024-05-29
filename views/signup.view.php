@@ -1,41 +1,5 @@
-<?php
-require_once "Database.php";
-require_once "function.php";
-session_start();
+<?php include "partials/head.php"; ?>
 
-if (isset($_POST['signup'])) {
-  $name = sanitize($_POST['name']);
-  $email = sanitize($_POST['email']);
-  $inputpassword = sanitize($_POST['password']);
-  $password = md5($inputpassword);
-
-  // Establish database connection
-  $database = new Database();
-  $conn = $database->getConnection();
-
-  $sql = "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password')";
-  if (mysqli_query($conn, $sql)) {
-    $_SESSION['msg'] = "You have Signed Up Successfully";
-    $_SESSION['class'] = "text-bg-success";
-    header("Location: index.php");
-    exit();
-  } else {
-    $_SESSION['msg'] = "Sign Up failed";
-    $_SESSION['class'] = "text-bg-danger";
-    header("Location: index.php");
-    exit();
-  }
-}
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Online Trivia</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
 <body>
     <section class="main-section">
         <div class="container">
@@ -60,7 +24,7 @@ if (isset($_POST['signup'])) {
                                 </div>
                             </form>
                             <div class="py-4 text-center">
-                                <a href="index.php" class="link">Login</a>
+                                <a href="/login" class="link">Login</a>
                             </div>
                         </div>
                     </div>
