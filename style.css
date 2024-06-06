@@ -54,3 +54,31 @@
     background-image: url(../img/background.png);
     height: 200px;
   }
+
+  .nav-link:hover {
+    color: #bdc3c7 !important;
+    text-decoration: underline;
+}
+.btn-danger:hover {
+    background-color: #c0392b;
+    color: white;
+}
+.rounded-pill:hover {
+    border-color: #bdc3c7;
+}
+
+.footer-custom {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 20px 0;
+  text-align: center;
+}
+.footer-custom a {
+  color: #ecf0f1;
+  text-decoration: none;
+  margin: 0 10px;
+}
+.footer-custom a:hover {
+  color: #bdc3c7;
+  text-decoration: underline;
+}
