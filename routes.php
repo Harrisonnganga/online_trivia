@@ -6,7 +6,7 @@ return [
     '/quiz' => __DIR__ . '/controllers/quiz.php',
     '/signup' => __DIR__ . '/controllers/signup.php',
     '/result' => __DIR__ .'controllers/result.php',
-    '/logout' => __DIR__ .'controllers/logout.php',
+    '/logout' => __DIR__ .'/logout.php',
     '/checkanswers' => 'checkanswers.php',
 
 ];

@@ -1,9 +1,10 @@
 <?php include "partials/head.php"; ?>
 
-<body>
+<body class="img-3 ">
     <div class="container">
         <div class="row justify-content-center align-items-center" style="height: 100vh">
             <div class="col-md-6">
+            <div class="img"></div>
                 <div class="card">
                     <div class="card-body text-center">
                         <h1 class="card-title">Welcome to Online Trivia!</h1>

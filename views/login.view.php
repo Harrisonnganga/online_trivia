@@ -1,31 +1,38 @@
 <?php include "partials/head.php"; ?>
 <body>
 <section class="main-section">
-<?php include "partials/nav.php"; ?>
 
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-md-8">
-          <div class="card my-2 p-3">
+        <div class="col-md-6">
+        <div class="img"></div>
+
+          <div class="card my-4 p-3">
             <div class="card-body">
-              <h5 class="card-title py-2">Top Scores</h5>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                    <tr>
-                      <td><?php echo htmlspecialchars($row['name']); ?></td>
-                      <td><?php echo htmlspecialchars($row['score']); ?></td>
-                    </tr>
-                  <?php endwhile; ?>
-                </tbody>
-              </table>
-              <a href="/quiz" class="btn btn-info">Start Quiz</a>
+              <?php if (isset($_SESSION['msg'])): ?>
+                <div class="alert <?php echo $_SESSION['class']; ?> mt-2">
+                  <?php echo $_SESSION['msg']; ?>
+                </div>
+                <?php unset($_SESSION['msg']); ?>
+                <?php unset($_SESSION['class']); ?>
+              <?php endif; ?>
+
+              <h5 class="card-title">Login</h5>
+              <form method="POST" action="">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" name="login" class="btn btn-primary">Login</button>
+              </form>
+              <div class="py-4 text-center">
+                You new, <br>
+                <a href="/signup" class="link">Sign Up</a>
+              </div>
             </div>
           </div>
         </div>

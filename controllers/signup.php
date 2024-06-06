@@ -14,17 +14,35 @@ if (isset($_POST['signup'])) {
   $database = new Database();
   $conn = $database->getConnection();
 
-  $sql = "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password')";
-  if (mysqli_query($conn, $sql)) {
+  // Prepare SQL statement
+  $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+
+  if ($stmt === false) {
+    $_SESSION['msg'] = "Prepare failed: " . $conn->error;
+    $_SESSION['class'] = "text-bg-danger";
+    header("Location: index.php");
+    exit();
+  }
+
+  // Bind parameters
+  $stmt->bind_param("sss", $name, $email, $password);
+
+  // Execute statement
+  if ($stmt->execute()) {
     $_SESSION['msg'] = "You have Signed Up Successfully";
     $_SESSION['class'] = "text-bg-success";
     header("Location: /dashboard");
     exit();
   } else {
-    $_SESSION['msg'] = "Sign Up failed";
+    $_SESSION['msg'] = "Sign Up failed: " . $stmt->error;
     $_SESSION['class'] = "text-bg-danger";
     header("Location: index.php");
     exit();
   }
-}
 
+  // Close statement and connection
+  $stmt->close();
+  $conn->close();
+}
+?>
+s

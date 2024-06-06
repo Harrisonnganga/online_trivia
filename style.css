@@ -41,3 +41,16 @@
     border: 1px solid #029161 !important;
     color: #fff !important;
   }
+  .img {
+    background-image: url(../img/login.jpg);
+    height: 200px;
+  }
+
+  .img-2 {
+    background-image: url(../img/signup.jpg);
+    height: 200px;
+  }
+  .img-3 {
+    background-image: url(../img/background.png);
+    height: 200px;
+  }
